@@ -458,9 +458,9 @@ namespace NzbDrone.Core.Parser
 
             possibleTitles.Add(searchCriteria.Movie.CleanTitle);
 
-            foreach (string altTitle in searchCriteria.Movie.AlternativeTitles)
+            foreach (string altTitle in searchCriteria.Movie.AlternativeTitles.Select(t => t.CleanTitle))
             {
-                possibleTitles.Add(altTitle.CleanSeriesTitle());
+                possibleTitles.Add(altTitle);
             }
 
             string cleanTitle = parsedMovieInfo.MovieTitle.CleanSeriesTitle();
@@ -780,9 +780,9 @@ namespace NzbDrone.Core.Parser
                     case MappingResultType.WrongYear:
                         return $"Failed to map movie, expected year {RemoteMovie.Movie.Year}, but found {RemoteMovie.ParsedMovieInfo.Year}";
                     case MappingResultType.WrongTitle:
-                        var comma = RemoteMovie.Movie.AlternativeTitles.Count > 0 ? ", " : "";
+                        var comma = RemoteMovie.Movie.AlternativeTitles.Count() > 0 ? ", " : "";
                         return
-                            $"Failed to map movie, found title {RemoteMovie.ParsedMovieInfo.MovieTitle}, expected one of: {RemoteMovie.Movie.Title}{comma}{string.Join(", ", RemoteMovie.Movie.AlternativeTitles)}";
+                            $"Failed to map movie, found title {RemoteMovie.ParsedMovieInfo.MovieTitle}, expected one of: {RemoteMovie.Movie.Title}{comma}{string.Join(", ", RemoteMovie.Movie.AlternativeTitles.Select(t => t.Title))}";
                     default:
                         return $"Failed to map movie for unkown reasons";
                 }

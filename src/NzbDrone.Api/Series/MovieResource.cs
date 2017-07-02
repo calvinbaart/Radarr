@@ -156,7 +156,7 @@ namespace NzbDrone.Api.Movie
                 Tags = model.Tags,
                 Added = model.Added,
                 AddOptions = model.AddOptions,
-                AlternativeTitles = model.AlternativeTitles,
+                AlternativeTitles = model.AlternativeTitles.Select(t => t.Title).ToList(),
                 Ratings = model.Ratings,
                 MovieFile = movieFile,
                 YouTubeTrailerId = model.YouTubeTrailerId,
@@ -209,7 +209,7 @@ namespace NzbDrone.Api.Movie
                 Tags = resource.Tags,
                 Added = resource.Added,
                 AddOptions = resource.AddOptions,
-                AlternativeTitles = resource.AlternativeTitles,
+                //AlternativeTitles = resource.AlternativeTitles,
                 Ratings = resource.Ratings,
                 YouTubeTrailerId = resource.YouTubeTrailerId,
                 Studio = resource.Studio

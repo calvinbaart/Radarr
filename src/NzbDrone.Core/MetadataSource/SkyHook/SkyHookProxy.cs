@@ -19,6 +19,7 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.NetImport.ImportExclusions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MetadataSource.RadarrAPI;
+using NzbDrone.Core.Movies.AlternativeTitles;
 
 namespace NzbDrone.Core.MetadataSource.SkyHook
 {
@@ -134,23 +135,6 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
 			var movie = new Movie();
 
-			if (langCode != "us")
-			{
-				movie.AlternativeTitles.Add(resource.original_title);
-			}
-
-            foreach (var alternativeTitle in resource.alternative_titles.titles)
-            {
-                if (alternativeTitle.iso_3166_1.ToLower() == langCode)
-                {
-                    movie.AlternativeTitles.Add(alternativeTitle.title);
-                }
-                else if (alternativeTitle.iso_3166_1.ToLower() == "us")
-                {
-                    movie.AlternativeTitles.Add(alternativeTitle.title);
-                }
-            }
-
             movie.TmdbId = TmdbId;
             movie.ImdbId = resource.imdb_id;
             movie.Title = resource.title;
@@ -159,6 +143,23 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             movie.SortTitle = Parser.Parser.NormalizeTitle(resource.title);
             movie.Overview = resource.overview;
             movie.Website = resource.homepage;
+            
+            if (langCode != "us" && resource.original_title.CleanSeriesTitle() != movie.CleanTitle)
+            {
+                movie.AlternativeTitles.Add(new AlternativeTitle(resource.original_title));
+            }
+
+            foreach (var alternativeTitle in resource.alternative_titles.titles)
+            {
+                if (alternativeTitle.iso_3166_1.ToLower() == langCode)
+                {
+                    movie.AlternativeTitles.Add(new AlternativeTitle(alternativeTitle.title, SourceType.TMDB, IsoLanguages.Find(alternativeTitle.iso_3166_1).Language));
+                }
+                else if (alternativeTitle.iso_3166_1.ToLower() == "us")
+                {
+                    movie.AlternativeTitles.Add(new AlternativeTitle(alternativeTitle.title));
+                }
+            }
 
             if (resource.release_date.IsNotNullOrWhiteSpace())
             {

@@ -132,7 +132,7 @@ namespace NzbDrone.Core.Datastore
                             query: (db, parent) => db.Query<Episode>().Where(c => c.EpisodeFileId == parent.Id).ToList())
                   .HasOne(file => file.Series, file => file.SeriesId);
 
-                Mapper.Entity<MovieFile>().RegisterModel("MovieFiles")
+            Mapper.Entity<MovieFile>().RegisterModel("MovieFiles")
                 .Ignore(f => f.Path)
                 .Relationships.AutoMapICollectionOrComplexProperties()
                 .For("Movie")
@@ -147,6 +147,8 @@ namespace NzbDrone.Core.Datastore
                 .HasOne(m => m.MovieFile, m => m.MovieFileId)
                 .For(m => m.AlternativeTitles)
                 .JoinMany<AlternativeTitle>(m => m.AlternativeTitles, (m, t) => m.Id == t.Id);
+
+            Mapper.Entity<AlternativeTitle>().RegisterModel("AlternativeTitles");
 
             Mapper.Entity<ImportExclusion>().RegisterModel("ImportExclusions");
        

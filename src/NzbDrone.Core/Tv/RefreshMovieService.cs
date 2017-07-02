@@ -110,7 +110,7 @@ namespace NzbDrone.Core.Tv
 
             try
             {
-                var newTitles = movieInfo.AlternativeTitles.Value.Except(movie.AlternativeTitles.Value);
+                var newTitles = movieInfo.AlternativeTitles.Except(movie.AlternativeTitles);
                 _titleService.AddAltTitles(newTitles.ToList(), movie);
             }
             catch (Exception e)

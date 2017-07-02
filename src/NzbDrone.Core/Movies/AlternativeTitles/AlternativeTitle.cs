@@ -15,6 +15,19 @@ namespace NzbDrone.Core.Movies.AlternativeTitles
         public int VoteCount { get; set; }
         public Language Language { get; set; }
 
+        public AlternativeTitle()
+        {
+            
+        }
+
+        public AlternativeTitle(string title, SourceType sourceType = SourceType.TMDB, Language language = Language.English)
+        {
+            Title = title;
+            CleanTitle = title.CleanSeriesTitle();
+            SourceType = sourceType;
+            Language = language;
+        }
+
         public bool IsTrusted(int minVotes = 3)
         {
             switch (SourceType)

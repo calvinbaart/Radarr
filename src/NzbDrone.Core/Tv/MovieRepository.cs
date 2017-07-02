@@ -247,7 +247,7 @@ namespace NzbDrone.Core.Tv
 
                 if (result == null)
                 {
-                    IEnumerable<Movie> movies = All();
+                    /*IEnumerable<Movie> movies = All();
                     Func<string, string> titleCleaner = title => CoreParser.CleanSeriesTitle(title.ToLower());
                     Func<IEnumerable<string>, string, bool> altTitleComparer =
                         (alternativeTitles, atitle) =>
@@ -255,7 +255,7 @@ namespace NzbDrone.Core.Tv
 
                     result = movies.Where(m => altTitleComparer(m.AlternativeTitles, cleanTitle) ||
                                                 altTitleComparer(m.AlternativeTitles, cleanTitleWithRomanNumbers) ||
-                                          altTitleComparer(m.AlternativeTitles, cleanTitleWithArabicNumbers)).FirstWithYear(year);
+                                          altTitleComparer(m.AlternativeTitles, cleanTitleWithArabicNumbers)).FirstWithYear(year);*/
 
                 }
             }
