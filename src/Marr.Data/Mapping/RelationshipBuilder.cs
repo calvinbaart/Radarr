@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Marr.Data.Mapping.Strategies;
@@ -69,6 +70,83 @@ namespace Marr.Data.Mapping
             Relationships[_currentPropertyName].LazyLoaded = new LazyLoaded<TEntity, TChild>(query, condition);
             return this;
         }
+        
+        /// <summary>
+        /// Sets the current property to be eager loaded by the given query.
+        /// </summary>
+        /// <typeparam name="TChild"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public RelationshipBuilder<TEntity> EagerLoad<TChild>(Func<IDataMapper, TEntity, TChild> query, Func<TEntity, bool> condition = null)
+        {
+            AssertCurrentPropertyIsSet();
+
+            var relationship = Relationships[_currentPropertyName];
+            relationship.EagerLoaded = new EagerLoaded<TEntity, TChild>
+            {
+                Query = query,
+                RelationshipType = relationship.RelationshipInfo.RelationType,
+                Condition = condition
+            };
+            return this;
+        }
+        
+        /// <summary>
+        /// Sets the current one-to-one relationship property to be eager loaded using the given join relationship.
+        /// </summary>
+        /// <typeparam name="TRight">The type of entity that will be the right join.</typeparam>
+        /// <param name="rightEntityOne">
+        /// A lambda expression that specifies which child property to join.
+        /// Ex: order => order.OrderItems
+        /// </param>
+        /// <param name="joinOn">
+        /// A lambda expression that specifies the join condition.
+        /// Ex: (order, orderItem) => order.ID == orderItem.OrderID
+        /// </param>
+        /// <param name="joinType">
+        /// The type of SQL join: Inner, Left or Right.
+        /// Default: Left
+        /// </param>
+        /// <returns></returns>
+        public RelationshipBuilder<TEntity> JoinOne<TRight>(
+            Expression<Func<TEntity, TRight>> rightEntityOne, 
+            Expression<Func<TEntity, TRight, bool>> joinOn, 
+            QGen.JoinType joinType = QGen.JoinType.Left)
+        {
+            AssertCurrentPropertyIsSet();
+            Relationships[_currentPropertyName].EagerLoadedJoin = new EagerLoadedJoin<TEntity, TRight>
+            {
+                JoinType = joinType,
+                RightEntityOne = rightEntityOne,
+                JoinOn = joinOn
+            };
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the current one-to-many relationship property to be eager loaded using the given join relationship.
+        /// </summary>
+        /// <typeparam name="TRight"></typeparam>
+        /// <param name="rightEntityMany"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="joinType"></param>
+        /// <returns></returns>
+        public RelationshipBuilder<TEntity> JoinMany<TRight>(
+            Expression<Func<TEntity, IEnumerable<TRight>>> rightEntityMany, 
+            Expression<Func<TEntity, TRight, bool>> joinOn, 
+            QGen.JoinType joinType = QGen.JoinType.Left)
+        {
+            AssertCurrentPropertyIsSet();
+            Relationships[_currentPropertyName].EagerLoadedJoin = new EagerLoadedJoin<TEntity, TRight>
+            {
+                JoinType = joinType,
+                RightEntityMany = rightEntityMany,
+                JoinOn = joinOn
+            };
+            return this;
+        }
+
 
         public RelationshipBuilder<TEntity> SetOneToOne()
         {

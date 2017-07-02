@@ -91,6 +91,24 @@ namespace Marr.Data.Mapping
         }
 
         public ILazyLoaded LazyLoaded { get; set; }
+        
+        public IEagerLoaded EagerLoaded { get; set; }
+        public bool IsEagerLoaded
+        {
+            get
+            {
+                return EagerLoaded != null;
+            }
+        }
+
+        public IEagerLoadedJoin EagerLoadedJoin { get; set; }
+        public bool IsEagerLoadedJoin
+        {
+            get
+            {
+                return EagerLoadedJoin != null;
+            }
+        }
 
         public GetterDelegate Getter { get; set; }
         public SetterDelegate Setter { get; set; }

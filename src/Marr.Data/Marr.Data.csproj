@@ -62,6 +62,8 @@
     <Compile Include="DataHelper.cs" />
     <Compile Include="DataMapper.cs" />
     <Compile Include="DataMappingException.cs" />
+    <Compile Include="EagerLoaded.cs" />
+    <Compile Include="EagerLoadedJoin.cs" />
     <Compile Include="EntityGraph.cs" />
     <Compile Include="EntityMerger.cs" />
     <Compile Include="EntityReference.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="IDataMapper.cs" />
     <Compile Include="LazyLoaded.cs" />
     <Compile Include="Mapping\FluentMappings.cs" />
+    <Compile Include="QGen\IQueryToList.cs" />
     <Compile Include="QGen\SqliteRowCountQueryDecorator.cs" />
     <Compile Include="QGen\SqlitePagingQueryDecorator.cs" />
     <Compile Include="UnitOfWork.cs" />

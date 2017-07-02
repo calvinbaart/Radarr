@@ -15,7 +15,7 @@ namespace Marr.Data.QGen
     /// It uses chaining methods to provide a fluent interface for creating select queries.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class QueryBuilder<T> : ExpressionVisitor, IEnumerable<T>, IQueryBuilder
+    public class QueryBuilder<T> : ExpressionVisitor, IEnumerable<T>, IQueryBuilder, IQueryToList
     {
         #region - Private Members -
 
@@ -402,7 +402,7 @@ namespace Marr.Data.QGen
 
         public virtual SortBuilder<T> Where<TObj>(Expression<Func<TObj, bool>> filterExpression)
         {
-            bool useAltNames = _isFromView || _isGraph;
+            bool useAltNames = (_isFromView || _isGraph)  && !_isJoin;
             bool addTablePrefixToColumns = true;
             _whereBuilder = new WhereBuilder<T>(_db.Command, _dialect, filterExpression, _tables, useAltNames, addTablePrefixToColumns);
             return SortBuilder;
@@ -410,7 +410,7 @@ namespace Marr.Data.QGen
 
         public virtual SortBuilder<T> Where(Expression<Func<T, bool>> filterExpression)
         {
-            bool useAltNames = _isFromView || _isGraph;
+            bool useAltNames = (_isFromView || _isGraph) && !_isJoin;
             bool addTablePrefixToColumns = true;
             _whereBuilder = new WhereBuilder<T>(_db.Command, _dialect, filterExpression, _tables, useAltNames, addTablePrefixToColumns);
             return SortBuilder;
@@ -426,7 +426,7 @@ namespace Marr.Data.QGen
                 whereClause = whereClause.Insert(0, " WHERE ");
             }
 
-            bool useAltNames = _isFromView || _isGraph || _isJoin;
+            bool useAltNames = (_isFromView || _isGraph) && !_isJoin;
             _whereBuilder = new WhereBuilder<T>(whereClause, useAltNames);
             return SortBuilder;
         }
@@ -631,5 +631,10 @@ namespace Marr.Data.QGen
         }
 
         #endregion
+
+        object IQueryToList.ToListObject()
+        {
+            return ToList();
+        }
     }
 }
