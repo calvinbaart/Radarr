@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -67,9 +67,7 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
             foreach (var queryTitle in searchCriteria.EpisodeQueryTitles)
             {
-                pageableRequests.Add(GetPagedRequests(MaxPages,
-                    string.Format("&term={0}",
-                    PrepareQuery(queryTitle))));
+                pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery(queryTitle)));
             }
 
             return pageableRequests;
@@ -106,7 +104,11 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+            
+            pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery(searchCriteria.Movie.Title)));
+
+            return pageableRequests;
         }
     }
 }

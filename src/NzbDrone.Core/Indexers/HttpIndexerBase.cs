@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -150,6 +150,7 @@ namespace NzbDrone.Core.Indexers
                         foreach (var request in pageableRequest)
                         {
                             url = request.Url.FullUri;
+                            System.Console.WriteLine(url);
 
                             var page = FetchPage(request, parser);
 
